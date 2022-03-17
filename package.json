@@ -1,0 +1,27 @@
+{
+  "name": "slingercode-drive-client",
+  "version": "0.1.0",
+  "private": "true",
+  "author": {
+    "name": "Noel Espino",
+    "url": "https://slingercode.omg.lol",
+    "email": "noelespinocordova@tutanota.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slingercode/slingercode-drive-server.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
