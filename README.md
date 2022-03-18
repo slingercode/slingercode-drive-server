@@ -24,3 +24,24 @@ docker build .\
 docker run --name slingercode-drive-server -d -p "APP_PORT":8000\
   slingercode-drive-server:$(git log -1 --format=%h)
 ```
+
+### Docker compose
+
+In order to facilitate the build and execution of the client and server images,
+we can create a `docker-compose.yml` file in a general context of the
+two repositories:
+
+```
+client
+  |
+   - Dockerfile
+server
+  |
+   - Dockerfile
+.env
+docker-compose.yml
+```
+
+To help this process, a `.env` file must be created with both versions, the server and the client
+
+**NOTE: Both client and server repositories has the same `docker-compose.yml` version, and is only for development purpose**
