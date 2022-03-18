@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# testing
+/coverage
+
 # misc
 .DS_Store
 .env
@@ -18,3 +21,4 @@ yarn-debug.log*
 yarn-error.log*
 
 docker-build.sh
+package-lock.json
