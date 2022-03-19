@@ -11,12 +11,13 @@
     "type": "git",
     "url": "https://github.com/slingercode/slingercode-drive-server.git"
   },
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "node .",
     "dev": "nodemon ."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.54.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3"

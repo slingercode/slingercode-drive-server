@@ -45,3 +45,8 @@ docker-compose.yml
 To help this process, a `.env` file must be created with both versions, the server and the client
 
 **NOTE: Both client and server repositories has the same `docker-compose.yml` version, and is only for development purpose**
+
+## Usefull links
+
+* [AWS SDK JS v3](https://betterdev.blog/aws-javascript-sdk-v3-usage-problems-testing/)
+* [AWS SDK JS v3 S3 Readable type](https://github.com/aws/aws-sdk-js-v3/issues/1877)
