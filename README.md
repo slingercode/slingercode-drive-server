@@ -31,15 +31,14 @@ In order to facilitate the build and execution of the client and server images,
 we can create a `docker-compose.yml` file in a general context of the
 two repositories:
 
-```
-client
-  |
-   - Dockerfile
-server
-  |
-   - Dockerfile
-.env
-docker-compose.yml
+```shell
+.
+├── .env
+├── client
+│   └── Dockerfile
+├── docker-compose.yml
+└── server
+    └── Dockerfile
 ```
 
 To help this process, a `.env` file must be created with both versions, the server and the client
@@ -48,5 +47,5 @@ To help this process, a `.env` file must be created with both versions, the serv
 
 ## Usefull links
 
-* [AWS SDK JS v3](https://betterdev.blog/aws-javascript-sdk-v3-usage-problems-testing/)
-* [AWS SDK JS v3 S3 Readable type](https://github.com/aws/aws-sdk-js-v3/issues/1877)
+- [AWS SDK JS v3](https://betterdev.blog/aws-javascript-sdk-v3-usage-problems-testing/)
+- [AWS SDK JS v3 S3 Readable type](https://github.com/aws/aws-sdk-js-v3/issues/1877)
