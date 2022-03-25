@@ -7,6 +7,19 @@ Create a `.env` file and insert the variables below
 - `APP_PORT`: The port in which the app is going to listen
 - `APP_CORS_ORIGINS`: A comma separated list to indicate the allowed origins for the server
 
+## Redis
+
+Set a local instance of [Redis](https://redis.io) with the next command
+
+```shell
+docker run --rm  \
+  --name redis \
+  -p 6379:6379 \
+  -v "LOCAL_DIRECTORY":/data \
+  -d redis:alpine3.15 \
+    --save 60 1
+```
+
 ## Build image (local)
 
 We can use the following script in order to build and run the image locally:
