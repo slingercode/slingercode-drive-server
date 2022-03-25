@@ -11,10 +11,15 @@ const corsOrigins = APP_CORS_ORIGINS.split(",");
 const app = express();
 
 /**
+ * Static
+ */
+app.use("/public", express.static("public"));
+
+/**
  * Middlewares
  */
 app.use(cors({ origin: corsOrigins }));
-app.use("/public", express.static("public"));
+app.use(express.json());
 
 /**
  * Routes

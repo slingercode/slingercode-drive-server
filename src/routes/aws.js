@@ -1,57 +1,92 @@
-const router = require("express").Router();
-const { GetObjectCommand } = require("@aws-sdk/client-s3");
 const sharp = require("sharp");
+const express = require("express");
+const multiparty = require("multiparty");
+const { GetObjectCommand, PutObjectCommand } = require("@aws-sdk/client-s3");
 
-const awsClient = require("../lib/aws-client");
+const { s3Client } = require("../lib/aws");
+const { streamToBase64 } = require("../helpers/utils");
 
-const { streamToBase64, getBuffer } = require("../helpers/utils");
+const router = express.Router();
 
-router.get("/", async (_, res) => {
+router.post("/get", async (req, res) => {
   try {
-    const response = await awsClient.send(
+    const { folder, file } = req.body;
+
+    if (!req.body || !folder || !file) {
+      throw new Error("No body");
+    }
+
+    const response = await s3Client.send(
       new GetObjectCommand({
         Bucket: "slingercode-test-1",
-        Key: "noel/1627829348697.png",
+        Key: `${folder}/${file}`,
       })
     );
 
-    const bodyContents = await streamToBase64(response.Body);
+    const base64 = await streamToBase64(response.Body);
 
     res.writeHead(200, {
-      "Content-Type": "img/png",
-      "Content-Length": bodyContents.length,
+      "Content-Type": "img/webp",
+      "Content-Length": base64.length,
     });
 
-    return res.end(bodyContents);
+    return res.end(base64);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
-router.get("/webp", async (_, res) => {
-  try {
-    const response = await awsClient.send(
-      new GetObjectCommand({
-        Bucket: "slingercode-test-1",
-        Key: "noel/1627829348697.png",
+router.post("/upload", (req, res) => {
+  let filename = "";
+  const chunks = [];
+  const form = new multiparty.Form();
+
+  form.on("error", (error) => res.status(500).json({ error: error.message }));
+
+  form.on("part", (part) => {
+    if (part.filename === undefined) {
+      part.resume();
+    }
+
+    if (part.filename !== undefined) {
+      filename = part.filename.split(".")[0];
+      part.on("data", (chunk) => chunks.push(chunk));
+      part.resume();
+    }
+
+    part.on("error", (error) => res.status(500).json({ error: error.message }));
+  });
+
+  form.on("close", () => {
+    const buffer = Buffer.concat(chunks);
+
+    sharp(buffer)
+      .webp()
+      .toBuffer()
+      .then(async (blob) => {
+        try {
+          const bodyContents = blob.toString("base64");
+
+          const data = await s3Client.send(
+            new PutObjectCommand({
+              Bucket: "slingercode-test-1",
+              Key: `noel/${filename}.webp`,
+              Body: blob,
+            })
+          );
+
+          return res.status(200).json({
+            data,
+            bodyContents,
+          });
+        } catch (error) {
+          return res.status(500).json({ error: error.message });
+        }
       })
-    );
+      .catch((error) => res.status(500).json({ error: error.message }));
+  });
 
-    const buffer = await getBuffer(response.Body);
-
-    const newFormat = await sharp(buffer).webp().toBuffer();
-
-    const bodyContents = newFormat.toString("base64");
-
-    res.writeHead(200, {
-      "Content-Type": "img/webp",
-      "Content-Length": bodyContents.length,
-    });
-
-    return res.end(bodyContents);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
+  form.parse(req);
 });
 
 module.exports = router;

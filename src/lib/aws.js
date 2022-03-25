@@ -2,6 +2,6 @@ const { S3Client } = require("@aws-sdk/client-s3");
 
 const region = "us-east-1";
 
-const client = new S3Client({ region });
+const s3Client = new S3Client({ region });
 
-module.exports = client;
+module.exports = { s3Client };
