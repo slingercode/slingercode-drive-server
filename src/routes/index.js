@@ -1,7 +1,7 @@
 const path = require("path");
 const router = require("express").Router();
 
-const aws = require("./aws");
+const { get, upload } = require("../api/aws");
 
 /**
  * General Routes
@@ -14,7 +14,10 @@ router.get("/", (_, res) =>
 
 router.get("/ping", (_, res) => res.status(200).send("pong"));
 
-// AWS
-router.use("/aws", aws);
+/**
+ * AWS S3
+ */
+router.get("/aws/s3/get", get);
+router.post("/aws/s3/upload", upload);
 
 module.exports = router;

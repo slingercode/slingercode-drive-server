@@ -58,6 +58,21 @@ To help this process, a `.env` file must be created with both versions, the serv
 
 **NOTE: Both client and server repositories has the same `docker-compose.yml` version, and is only for development purpose**
 
+## API Structure
+
+All the API calls are going to follow these order of execution
+
+- Basic security
+
+  - Authentication
+  - Body validation
+  - Declarations
+
+- Cache
+- DB Connections
+- Success state
+- Error state
+
 ## Usefull links
 
 - [AWS SDK JS v3](https://betterdev.blog/aws-javascript-sdk-v3-usage-problems-testing/)
