@@ -14,4 +14,18 @@ async function save(key, value) {
   }
 }
 
-module.exports = { save };
+async function remove(key) {
+  try {
+    const cacheSet = await cache.delete(key);
+
+    if (cacheSet.error) {
+      throw new Error(`${key} - ${cacheSet.error}`);
+    }
+
+    return { key, error: null };
+  } catch (error) {
+    return { key, error: error.message };
+  }
+}
+
+module.exports = { save, remove };

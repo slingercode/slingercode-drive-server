@@ -4,15 +4,19 @@ const cache = require("../../cache");
 const { handleClose } = require("./controllers/multiparty");
 const { get: s3Get } = require("./controllers/s3");
 
+// Auth token
+const user_id = "6240cb0d37bfec510178ba44";
+// const user_name = "noel";
+
 async function get(req, res) {
   try {
-    const { user, album, file } = req.query || {};
+    const { album, file } = req.query || {};
 
-    if (!user || !album || !file) {
+    if (!album || !file) {
       throw new Error("No body");
     }
 
-    const key = `${user}/${album}/${file}`;
+    const key = `${user_id}/${album}/${file}`;
 
     const cached = await cache.get(key);
 
@@ -45,9 +49,9 @@ async function get(req, res) {
 }
 
 function upload(req, res) {
-  const { user, album } = req.query || {};
+  const { album } = req.query || {};
 
-  if (!user || !album) {
+  if (!album) {
     return res.status(500).json({ error: "No query" });
   }
 
@@ -70,7 +74,9 @@ function upload(req, res) {
     part.on("error", (error) => res.status(500).json({ error: error.message }));
   });
 
-  form.on("close", () => handleClose(res, chunks, { user, album, filename }));
+  form.on("close", () =>
+    handleClose(res, chunks, { user: user_id, album, filename })
+  );
 
   form.on("error", (error) => res.status(500).json({ error: error.message }));
 

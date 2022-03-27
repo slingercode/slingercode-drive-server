@@ -1,6 +1,7 @@
 const { imgProccessing } = require("./sharp");
 const { upload } = require("./s3");
-const { save: cache } = require("./cache");
+const { save: cache, remove } = require("./cache");
+const { update: db } = require("./db");
 
 function handleClose(res, chunks, imgMeta) {
   const { user, album, filename } = imgMeta || {};
@@ -29,7 +30,9 @@ function handleClose(res, chunks, imgMeta) {
       }
 
       // DATABASE
+      const dbRes = await db(album, `${filename}.webp`);
 
+      await remove(`${user}/${album}`);
       const cacheFull = await cache(keyFull, full.toString("base64"));
       const cacheThumb = await cache(keyThumb, thumb.toString("base64"));
 
@@ -38,6 +41,7 @@ function handleClose(res, chunks, imgMeta) {
           full: s3Full.key,
           thumb: s3Thumb.key,
         },
+        db: dbRes,
         cache: {
           full: {
             key: cacheFull.key,

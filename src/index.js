@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 
 const router = require("./routes");
+const mongoose = require("./lib/mongoose");
 
 const { APP_PORT, APP_CORS_ORIGINS } = process.env;
 const corsOrigins = APP_CORS_ORIGINS.split(",");
@@ -25,5 +26,10 @@ app.use(express.json());
  * Routes
  */
 app.use(router);
+
+/**
+ * MongoDB
+ */
+mongoose.connect();
 
 app.listen(APP_PORT, () => console.log(`App listening on port: ${APP_PORT}`));
