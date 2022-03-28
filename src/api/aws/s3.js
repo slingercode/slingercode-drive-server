@@ -21,12 +21,9 @@ async function get(req, res) {
     const cached = await cache.get(key);
 
     if (cached.data && cached.data !== null) {
-      res.writeHead(200, {
-        "Content-Type": "img/webp",
-        "Content-Length": cached.data.length,
-      });
+      const data = JSON.parse(cached.data);
 
-      return res.end(cached.data);
+      return res.json({ data });
     }
 
     const data = await s3Get(key);
@@ -35,14 +32,9 @@ async function get(req, res) {
       throw new Error(data.error);
     }
 
-    await cache.set(key, data.data);
+    await cache.set(key, JSON.stringify(data.data));
 
-    res.writeHead(200, {
-      "Content-Type": "img/webp",
-      "Content-Length": data.data.length,
-    });
-
-    return res.end(data.data);
+    return res.json({ data: data.data });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

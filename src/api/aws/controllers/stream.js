@@ -9,7 +9,7 @@ const streamToBase64 = async (stream) =>
     stream.on("end", () => resolve(Buffer.concat(chunks).toString("base64")));
   });
 
-const stremTobuffer = async (stream) =>
+const streamTobuffer = async (stream) =>
   await new Promise((resolve, reject) => {
     const chunks = [];
     stream.on("data", (chunk) => chunks.push(chunk));
@@ -17,4 +17,4 @@ const stremTobuffer = async (stream) =>
     stream.on("end", () => resolve(Buffer.concat(chunks)));
   });
 
-module.exports = { streamToBase64, stremTobuffer };
+module.exports = { streamToBase64, streamTobuffer };

@@ -1,3 +1,5 @@
+const sizeOf = require("image-size");
+
 const { imgProccessing } = require("./sharp");
 const { upload } = require("./s3");
 const { save: cache, remove } = require("./cache");
@@ -13,7 +15,21 @@ function handleClose(res, chunks, imgMeta) {
   async function handler() {
     try {
       const full = await imgProccessing(chunks).webp().toBuffer();
+      const dimension = sizeOf(full);
+
+      let width,
+        height = 0;
+
+      if (dimension && dimension.width > dimension.height) {
+        width = 192;
+        height = 112;
+      } else {
+        width = 192;
+        height = 288;
+      }
+
       const thumb = await imgProccessing(chunks)
+        .resize({ width, height })
         .webp({ quality: 40, effort: 6 })
         .toBuffer();
 
@@ -33,8 +49,21 @@ function handleClose(res, chunks, imgMeta) {
       const dbRes = await db(album, `${filename}.webp`);
 
       await remove(`${user}/${album}`);
-      const cacheFull = await cache(keyFull, full.toString("base64"));
-      const cacheThumb = await cache(keyThumb, thumb.toString("base64"));
+
+      const cacheFullBody = {
+        width: dimension.width,
+        height: dimension.height,
+        data: full.toString("base64"),
+      };
+
+      const cacheThumbBody = {
+        width,
+        height,
+        data: thumb.toString("base64"),
+      };
+
+      const cacheFull = await cache(keyFull, JSON.stringify(cacheFullBody));
+      const cacheThumb = await cache(keyThumb, JSON.stringify(cacheThumbBody));
 
       return {
         s3: {

@@ -1,7 +1,8 @@
 const { GetObjectCommand, PutObjectCommand } = require("@aws-sdk/client-s3");
+const sizeOf = require("image-size");
 
 const { s3Client } = require("../../../lib/aws");
-const { streamToBase64 } = require("./stream");
+const { streamTobuffer } = require("./stream");
 
 async function get(Key) {
   try {
@@ -12,9 +13,17 @@ async function get(Key) {
       })
     );
 
-    const data = await streamToBase64(response.Body);
+    const buffer = await streamTobuffer(response.Body);
+    const dimension = sizeOf(buffer);
 
-    return { data, error: null };
+    return {
+      data: {
+        width: dimension.width,
+        height: dimension.height,
+        data: buffer.toString("base64"),
+      },
+      error: null,
+    };
   } catch (error) {
     return { data: null, error: error.message };
   }
