@@ -1,0 +1,8 @@
+{
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "eslint.enable": true,
+  "editor.insertSpaces": true,
+  "eslint.alwaysShowStatus": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
