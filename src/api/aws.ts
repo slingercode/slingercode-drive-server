@@ -1,14 +1,13 @@
-const multiparty = require("multiparty");
+import { Request, Response } from "express";
+import multiparty from "multiparty";
 
-const cache = require("../../cache");
-const { handleClose } = require("./controllers/multiparty");
-const { get: s3Get } = require("./controllers/s3");
+import cache from "../../cache";
+import { handleClose } from "./controllers/multiparty";
+import { get as s3Get } from "./controllers/s3";
 
-// Auth token
 const user_id = "6240cb0d37bfec510178ba44";
-// const user_name = "noel";
 
-async function get(req, res) {
+const get = async (req: Request, res: Response) => {
   try {
     const { album, file } = req.query || {};
 
@@ -21,7 +20,7 @@ async function get(req, res) {
     const cached = await cache.get(key);
 
     if (cached.data && cached.data !== null) {
-      const data = JSON.parse(cached.data);
+      const data: string = JSON.parse(cached.data);
 
       return res.json({ data });
     }
@@ -35,12 +34,12 @@ async function get(req, res) {
     await cache.set(key, JSON.stringify(data.data));
 
     return res.json({ data: data.data });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+  } catch (error: any) {
+    return res.status(500).json({ error: (error as Error).message });
   }
-}
+};
 
-function upload(req, res) {
+const upload = (req: Request, res: Response) => {
   const { album } = req.query || {};
 
   if (!album) {
@@ -49,7 +48,7 @@ function upload(req, res) {
 
   let filename = "";
 
-  const chunks = [];
+  const chunks: Uint8Array[] = [];
   const form = new multiparty.Form();
 
   form.on("part", (part) => {
@@ -67,12 +66,16 @@ function upload(req, res) {
   });
 
   form.on("close", () =>
-    handleClose(res, chunks, { user: user_id, album, filename })
+    handleClose(res, chunks, {
+      user: user_id,
+      album: album as string,
+      filename,
+    }),
   );
 
   form.on("error", (error) => res.status(500).json({ error: error.message }));
 
   form.parse(req);
-}
+};
 
-module.exports = { get, upload };
+export { get, upload };

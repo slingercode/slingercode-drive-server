@@ -1,14 +1,15 @@
-const cache = require("../../cache");
-const { Album } = require("../../lib/mongoose");
+import { Request, Response } from "express";
 
-// Auth token
+import cache from "../../cache";
+import Album from "../../models/album-schema";
+
 const user_id = "6240cb0d37bfec510178ba44";
 const user_name = "noel";
 
-async function getAlbums(_, res) {
+const getAlbums = async (_: Request, res: Response) => {
   try {
-    const cacheKey = `${user_id}/albums`;
-    const cached = await cache.get(cacheKey);
+    const cackeKey = `${user_id}/albums`;
+    const cached = await cache.get(cackeKey);
 
     if (cached.data && cached.data !== null) {
       return res.json({ albums: JSON.parse(cached.data) });
@@ -18,15 +19,15 @@ async function getAlbums(_, res) {
 
     const albums = data.map((album) => ({ _id: album._id, name: album.name }));
 
-    cache.set(cacheKey, JSON.stringify(albums));
+    cache.set(cackeKey, JSON.stringify(albums));
 
     res.json({ albums });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: (error as Error).message });
   }
-}
+};
 
-async function getAlbum(req, res) {
+const getAlbum = async (req: Request, res: Response) => {
   try {
     const { id } = req.query || {};
 
@@ -49,11 +50,11 @@ async function getAlbum(req, res) {
 
     res.json({ album });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: (error as Error).message });
   }
-}
+};
 
-async function createAlbum(req, res) {
+const createAlbum = async (req: Request, res: Response) => {
   try {
     const { album } = req.body || {};
 
@@ -74,15 +75,15 @@ async function createAlbum(req, res) {
 
     const newAlbum = await data.save();
 
-    await cache.delete(`${user_id}/albums`);
+    await cache.del(`${user_id}/albums`);
 
     res.json({ album: newAlbum });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: (error as Error).message });
   }
-}
+};
 
-async function updateAlbum(req, res) {
+const updateAlbum = async (req: Request, res: Response) => {
   try {
     const { id, file } = req.body || {};
 
@@ -96,8 +97,8 @@ async function updateAlbum(req, res) {
 
     return res.json({ res: data });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: (error as Error).message });
   }
-}
+};
 
-module.exports = { getAlbums, getAlbum, createAlbum, updateAlbum };
+export { getAlbums, getAlbum, createAlbum, updateAlbum };
