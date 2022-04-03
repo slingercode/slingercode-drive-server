@@ -1,13 +1,8 @@
 import path from "path";
 import { Request, Response, Router } from "express";
 
-import { get, upload } from "../api/ts/aws";
-import {
-  createAlbum,
-  getAlbum,
-  getAlbums,
-  updateAlbum,
-} from "../api/ts/albums";
+import { get, upload } from "../api/aws";
+import { createAlbum, getAlbum, getAlbums, updateAlbum } from "../api/albums";
 
 const router: Router = Router();
 

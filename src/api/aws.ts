@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import multiparty from "multiparty";
 
-import cache from "../../cache";
+import cache from "../cache";
 import { handleClose } from "./controllers/multiparty";
 import { get as s3Get } from "./controllers/s3";
 

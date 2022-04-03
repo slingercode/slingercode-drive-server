@@ -2,9 +2,9 @@ import { Response } from "express";
 import sizeOf from "image-size";
 import sharp from "sharp";
 
-import Album from "../../../models/album-schema";
+import Album from "../../models/album-schema";
 import { upload } from "./s3";
-import cache from "../../../cache";
+import cache from "../../cache";
 
 export const handleClose = (
   res: Response,

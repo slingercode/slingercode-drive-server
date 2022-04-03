@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import cache from "../../cache";
-import Album from "../../models/album-schema";
+import cache from "../cache";
+import Album from "../models/album-schema";
 
 const user_id = "6240cb0d37bfec510178ba44";
 const user_name = "noel";

@@ -1,7 +1,7 @@
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import sizeOf from "image-size";
-import s3Client from "../../../lib/aws";
-import { streamTobuffer } from "../../../helpers/stream";
+import s3Client from "../../lib/aws";
+import { streamTobuffer } from "../../helpers/stream";
 
 const get = async (
   Key: string,
