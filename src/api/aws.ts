@@ -25,7 +25,7 @@ const get = async (req: Request, res: Response) => {
       return res.json({ data });
     }
 
-    const data = await s3Get(key);
+    const data = await s3Get(key, file as string);
 
     if (data.error) {
       throw new Error(data.error);

@@ -5,10 +5,12 @@ import { streamTobuffer } from "../../helpers/stream";
 
 const get = async (
   Key: string,
+  file: string,
 ): Promise<{
   data: {
     width: number;
     height: number;
+    name: string;
     data: string;
   } | null;
   error: string | null;
@@ -28,6 +30,7 @@ const get = async (
       data: {
         width: dimension.width!,
         height: dimension.height!,
+        name: file,
         data: buffer.toString("base64"),
       },
       error: null,

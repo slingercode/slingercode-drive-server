@@ -75,6 +75,7 @@ export const handleClose = (
       const cacheThumbBody = {
         width,
         height,
+        name: meta.filename,
         data: thumb.toString("base64"),
       };
 
