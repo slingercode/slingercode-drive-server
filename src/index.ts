@@ -30,4 +30,7 @@ app.use(router);
  * Initialization
  */
 initMongo();
-app.listen(ENV.APP.PORT, () => console.log(`Server listening on: ${ENV.APP.PORT}`));
+
+app.listen(ENV.APP.PORT, () =>
+  console.log(`Server listening on: ${ENV.APP.PORT}`),
+);

@@ -6,6 +6,12 @@ Create a `.env` file and insert the variables below
 
 - `APP_PORT`: The port in which the app is going to listen
 - `APP_CORS_ORIGINS`: A comma separated list to indicate the allowed origins for the server
+- `AUTH0_AUDIENCE`: Audience scope for Auth0
+- `AUTH0_DOMAIN`: Issuer domain for Auth0
+- `MONGO_URI`: Connection string of a MongoDb instance
+- `MONGO_DB_NAME`: Database name
+- `REDIS_HOST`: Host of a Redis instance
+- `REDIS_PORT`: Port of the redis instance
 
 ## Redis
 

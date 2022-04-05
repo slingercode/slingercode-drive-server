@@ -1,8 +1,11 @@
 import path from "path";
 import { Request, Response, Router } from "express";
 
+import me from "../api/me";
 import { get, upload } from "../api/aws";
 import { createAlbum, getAlbum, getAlbums, updateAlbum } from "../api/albums";
+
+import authorizeAccessToken from "../middlewares/authorization";
 
 const router: Router = Router();
 
@@ -18,6 +21,13 @@ router.get("/", (_: Request, res: Response) =>
 router.get("/ping", (_: Request, res: Response) =>
   res.status(200).send("pong"),
 );
+
+/**
+ * Authorization token
+ */
+router.use(authorizeAccessToken);
+
+router.get("/me", me);
 
 /**
  * Albums

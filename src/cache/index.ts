@@ -1,6 +1,8 @@
 import redis from "../lib/redis";
 
-const get = async (key: string): Promise<{ data: string | null; error: string | null }> => {
+const get = async (
+  key: string,
+): Promise<{ data: string | null; error: string | null }> => {
   try {
     const cache = await redis.get(key);
 
