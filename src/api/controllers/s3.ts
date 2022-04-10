@@ -1,7 +1,9 @@
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import sizeOf from "image-size";
+
 import s3Client from "../../lib/aws";
 import { streamTobuffer } from "../../helpers/stream";
+import ENV from "../../config/env";
 
 const get = async (
   Key: string,
@@ -18,7 +20,7 @@ const get = async (
   try {
     const response = await s3Client.send(
       new GetObjectCommand({
-        Bucket: "slingercode-test-1",
+        Bucket: ENV.AWS.BUCKET,
         Key,
       }),
     );
@@ -47,7 +49,7 @@ const upload = async (
   try {
     await s3Client.send(
       new PutObjectCommand({
-        Bucket: "slingercode-test-1",
+        Bucket: ENV.AWS.BUCKET,
         Key,
         Body,
       }),

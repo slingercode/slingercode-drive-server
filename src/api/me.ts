@@ -15,7 +15,7 @@ const me = async (req: Request, res: Response) => {
     const prev = await User.findOne({ auth0: sub });
 
     if (prev) {
-      return res.json({ ...prev });
+      return res.json({ ...prev._doc });
     }
 
     const user = new User({

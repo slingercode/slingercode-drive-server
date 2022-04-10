@@ -7,6 +7,9 @@ const ENV = {
     DOMAIN: process.env.AUTH0_DOMAIN || "",
     AUDIENCE: process.env.AUTH0_AUDIENCE || "",
   },
+  AWS: {
+    BUCKET: process.env.AWS_S3_BUCKET || "",
+  },
   MONGO: {
     URI: process.env.MONGO_URI || "mongodb://localhost:27017",
     DB_NAME: process.env.MONGO_DB_NAME || "test",

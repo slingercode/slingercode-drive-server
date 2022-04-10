@@ -3,11 +3,14 @@ import { Request, Response } from "express";
 import cache from "../cache";
 import Album from "../models/album-schema";
 
-const user_id = "6240cb0d37bfec510178ba44";
-const user_name = "noel";
-
-const getAlbums = async (_: Request, res: Response) => {
+const getAlbums = async (req: Request, res: Response) => {
   try {
+    const { user_id } = req.query || {};
+
+    if (!user_id) {
+      throw new Error("No query");
+    }
+
     const cackeKey = `${user_id}/albums`;
     const cached = await cache.get(cackeKey);
 
@@ -29,20 +32,20 @@ const getAlbums = async (_: Request, res: Response) => {
 
 const getAlbum = async (req: Request, res: Response) => {
   try {
-    const { id } = req.query || {};
+    const { user_id, album_id } = req.query || {};
 
-    if (!id) {
+    if (!user_id || !album_id) {
       throw new Error("No query");
     }
 
-    const cacheKey = `${user_id}/${id}`;
+    const cacheKey = `${user_id}/${album_id}`;
     const cached = await cache.get(cacheKey);
 
     if (cached.data && cached.data !== null) {
       return res.json({ album: JSON.parse(cached.data) });
     }
 
-    const album = await Album.findById(id);
+    const album = await Album.findById(album_id);
 
     if (album) {
       cache.set(cacheKey, JSON.stringify(album));
@@ -56,17 +59,14 @@ const getAlbum = async (req: Request, res: Response) => {
 
 const createAlbum = async (req: Request, res: Response) => {
   try {
-    const { album } = req.body || {};
+    const { user, album } = req.body || {};
 
-    if (!album) {
+    if (!user || !album) {
       throw new Error("No body");
     }
 
     const body = {
-      user: {
-        _id: user_id,
-        name: user_name,
-      },
+      user,
       name: album,
       files: [],
     };
@@ -75,7 +75,7 @@ const createAlbum = async (req: Request, res: Response) => {
 
     const newAlbum = await data.save();
 
-    await cache.del(`${user_id}/albums`);
+    await cache.del(`${user._id}/albums`);
 
     res.json({ album: newAlbum });
   } catch (error) {
